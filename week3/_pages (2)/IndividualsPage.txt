@@ -1,0 +1,90 @@
+```typescript
+import { BrowserContext, Page } from "@playwright/test";
+import { PlaywrightWrapper } from "../helpers/playwright";
+
+export class IndividualsPage extends PlaywrightWrapper {
+    private readonly selectors = {
+        newButton: "//div[text()='New']",
+        salutationDropdown: "//span[text()='Salutation']/following::a[1]",
+        mrOption: "//a[text()='Mr.']",
+        mrOptionSecond: "(//a[text()='Mr.'])[2]",
+        firstNameInput: "//span[text()='First Name']/following::input[1]",
+        lastNameInput: "//span[text()='Last Name']/following::input[1]",
+        saveButton: "(//button[@title='Save'])[2]",
+        toastMessage: "//span[@class='toastMessage slds-text-heading--small forceActionsText']",
+        searchField: "//input[@placeholder='Search this list...']",
+        showActionsDropdown: "(//button[contains(@class,'slds-button slds-button_icon-border')])[2]",
+        deleteLink: "//a[@title='Delete']",
+        deletePopupButton: "//span[text()='Delete']",
+        deleteToastMessage: "//span[contains(@class,'toastMessage')]",
+        editLink: "//a[@title='Edit']",
+    };
+
+    constructor(page: Page, context: BrowserContext) {
+        super(page, context);
+    }
+
+    public async clickNewButton(): Promise<void> {
+        await this.click(this.selectors.newButton, "New Button", "Button");
+    }
+
+    public async selectSalutation(): Promise<void> {
+        await this.click(this.selectors.salutationDropdown, "Salutation Dropdown", "Button");
+        await this.click(this.selectors.mrOption, "Mr. Option", "Button");
+    }
+
+    public async selectSalutationOnEdit(): Promise<void> {
+        await this.click(this.selectors.salutationDropdown, "Salutation Dropdown", "Button");
+        await this.click(this.selectors.mrOptionSecond, "Mr. Option (Second)", "Button");
+    }
+
+    public async enterFirstName(fName: string): Promise<void> {
+        await this.type(this.selectors.firstNameInput, "First Name Field", fName);
+    }
+
+    public async enterLastName(lName: string): Promise<void> {
+        await this.type(this.selectors.lastNameInput, "Last Name Field", lName);
+    }
+
+    public async clickSaveButton(): Promise<void> {
+        await this.click(this.selectors.saveButton, "Save Button", "Button");
+    }
+
+    public async verifyCreateIndividuals(text: string): Promise<void> {
+        await this.validateElementVisibility(this.selectors.toastMessage, "Create Toast Message");
+        // Additional text verification can be added if wrapper supports it
+    }
+
+    public async enterIndividualSearchField(search: string): Promise<void> {
+        await this.type(this.selectors.searchField, "Search Field", search);
+        await this.page.keyboard.press("Enter");
+    }
+
+    public async clickShowActionDD(): Promise<void> {
+        await this.waitSelector(this.selectors.showActionsDropdown);
+        await this.click(this.selectors.showActionsDropdown, "Show Actions Dropdown", "Button");
+    }
+
+    public async clickDeleteLink(): Promise<void> {
+        await this.click(this.selectors.deleteLink, "Delete Link", "Link");
+    }
+
+    public async clickPoupDeleteButton(): Promise<void> {
+        await this.click(this.selectors.deletePopupButton, "Delete Popup Button", "Button");
+    }
+
+    public async verifyDeleteIndividuals(text: string): Promise<void> {
+        await this.validateElementVisibility(this.selectors.deleteToastMessage, "Delete Toast Message");
+        // Additional text verification can be added if wrapper supports it
+    }
+
+    public async clickEditLink(): Promise<void> {
+        await this.click(this.selectors.editLink, "Edit Link", "Link");
+    }
+
+    public async verifyEditIndividuals(text: string): Promise<void> {
+        await this.validateElementVisibility(this.selectors.toastMessage, "Edit Toast Message");
+        // Additional text verification can be added if wrapper supports it
+    }
+}
+```

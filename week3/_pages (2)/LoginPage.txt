@@ -1,0 +1,28 @@
+```typescript
+import { BrowserContext, Page } from "@playwright/test";
+import { PlaywrightWrapper } from "../helpers/playwright";
+
+export class LoginPage extends PlaywrightWrapper {
+    private readonly selectors = {
+        usernameField: "#username",
+        passwordField: "#password",
+        loginButton: "#Login",
+    };
+
+    constructor(page: Page, context: BrowserContext) {
+        super(page, context);
+    }
+
+    public async enterUsername(username: string): Promise<void> {
+        await this.type(this.selectors.usernameField, "Username Field", username);
+    }
+
+    public async enterPassword(password: string): Promise<void> {
+        await this.type(this.selectors.passwordField, "Password Field", password);
+    }
+
+    public async clickLogin(): Promise<void> {
+        await this.click(this.selectors.loginButton, "Login Button", "Button");
+    }
+}
+```

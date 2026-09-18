@@ -1,0 +1,14 @@
+```typescript
+import { BrowserContext, Page, test, expect } from "@playwright/test";
+import { PlaywrightWrapper } from "../helpers/playwright";
+
+export class LoginPage extends PlaywrightWrapper {
+    private readonly selectors = {
+        usernameInput: "input[name='username']",
+        passwordInput: "input[name='password']",
+        loginButton: "button#Login",
+        appLauncherIcon: ".slds-icon-waffle",
+        viewAllButton: "//button[text()='View All']",
+        searchField: "one-app-launcher-modal input.slds-input",
+        casesLink: "//a[text()='Cases']",
+        newCaseButton: "//button[contains

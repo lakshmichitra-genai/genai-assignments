@@ -1,0 +1,136 @@
+```typescript
+import { BrowserContext, Page } from "@playwright/test";
+import { PlaywrightWrapper } from "../helpers/playwright";
+
+export class CasePage extends PlaywrightWrapper {
+    private readonly selectors = {
+        newCaseButton: "//div[@title='New']",
+        contactNameInput: "//label[text()='Contact Name']/following::input[1]",
+        newContactButton: "//span[@title='New Contact']",
+        salutationDropdown: "//label[text()='Salutation']/following::button[1]",
+        salutationOption: (salutation: string) => `//span[@title='${salutation}']`,
+        firstNameInput: "//label[text()='First Name']/following::input[1]",
+        lastNameInput: "//label[text()='Last Name']/following::input[1]",
+        saveContactButton: "(//button[@name='SaveEdit'])[2]",
+        caseOriginDropdown: "//label[text()='Case Origin']/following::button[1]",
+        caseOriginOption: (origin: string) => `//span[@title='${origin}']`,
+        statusDropdown: "//label[text()='Status']/following::button[1]",
+        statusOption: (status: string) => `//label[text()='Status']/following::button[1]/following::span[@title='${status}']`,
+        slaViolationDropdown: "//label[text()='SLA Violation']/following::button[1]",
+        slaViolationOption: (value: string) => `//label[text()='SLA Violation']/following::button[1]/following::span[text()='${value}']`,
+        subjectInput: "//label[text()='Subject']/following::input[1]",
+        descriptionInput: "//label[text()='Description']/following::textarea[1]",
+        saveCaseButton: "(//button[@name='SaveEdit'])[1]",
+        editCaseButton: "//button[text()='Edit']",
+        deleteCaseButton: "//button[text()='Delete']",
+        confirmDeleteButton: "//span[text()='Delete']",
+        toastMessage: "//span[@class='toastMessage slds-text-heading--small forceActionsText']",
+        toastMessageContains: (msg: string) => `//span[contains(text(),'${msg}')]`,
+    };
+
+    constructor(page: Page, context: BrowserContext) {
+        super(page, context);
+    }
+
+    public async clickNewCase(): Promise<void> {
+        await this.click(this.selectors.newCaseButton, "New Case Button", "Button");
+    }
+
+    public async clickContactName(): Promise<void> {
+        await this.click(this.selectors.contactNameInput, "Contact Name Input", "Input");
+        await this.click(this.selectors.contactNameInput, "Contact Name Input", "Input");
+    }
+
+    public async clickNewContact(): Promise<void> {
+        await this.click(this.selectors.newContactButton, "New Contact Button", "Button");
+    }
+
+    public async selectSalutation(salutation: string): Promise<void> {
+        await this.click(this.selectors.salutationDropdown, "Salutation Dropdown", "Button");
+        await this.click(this.selectors.salutationOption(salutation), salutation, "Option");
+    }
+
+    public async enterFirstName(firstName: string): Promise<void> {
+        await this.type(this.selectors.firstNameInput, "First Name", firstName);
+    }
+
+    public async enterLastName(lastName: string): Promise<void> {
+        await this.type(this.selectors.lastNameInput, "Last Name", lastName);
+    }
+
+    public async clickSave(): Promise<void> {
+        await this.click(this.selectors.saveContactButton, "Save Contact Button", "Button");
+    }
+
+    public async selectCaseOrigin(origin: string): Promise<void> {
+        await this.click(this.selectors.caseOriginDropdown, "Case Origin Dropdown", "Button");
+        await this.click(this.selectors.caseOriginOption(origin), origin, "Option");
+    }
+
+    public async selectStatus(status: string): Promise<void> {
+        await this.click(this.selectors.statusDropdown, "Status Dropdown", "Button");
+        await this.click(this.selectors.statusOption(status), status, "Option");
+    }
+
+    public async slaViolation(value: string): Promise<void> {
+        await this.click(this.selectors.slaViolationDropdown, "SLA Violation Dropdown", "Button");
+        await this.click(this.selectors.slaViolationOption(value), value, "Option");
+    }
+
+    public async enterSubject(subject: string): Promise<void> {
+        await this.type(this.selectors.subjectInput, "Subject", subject);
+    }
+
+    public async enterDescription(description: string): Promise<void> {
+        await this.type(this.selectors.descriptionInput, "Description", description);
+    }
+
+    public async clickSaveCase(): Promise<void> {
+        await this.click(this.selectors.saveCaseButton, "Save Case Button", "Button");
+    }
+
+    public async clickEdit(): Promise<void> {
+        await this.validateElementVisibility(this.selectors.editCaseButton, "Edit Button");
+        await this.click(this.selectors.editCaseButton, "Edit Button", "Button");
+    }
+
+    public async clickDelete(): Promise<void> {
+        await this.click(this.selectors.deleteCaseButton, "Delete Button", "Button");
+    }
+
+    public async confirmDeletion(): Promise<void> {
+        await this.click(this.selectors.confirmDeleteButton, "Confirm Delete Button", "Button");
+    }
+
+    // Verification methods
+
+    public async verifyCreatedCase(text: string): Promise<void> {
+        const toastText = await this.page.locator(this.selectors.toastMessage).innerText();
+        if (!toastText.includes(text)) {
+            throw new Error(`Toast does not contain expected text: ${text}`);
+        }
+    }
+
+    public async verifyEditCases(text: string): Promise<void> {
+        const toastText = await this.page.locator(this.selectors.toastMessage).innerText();
+        if (!toastText.includes(text)) {
+            throw new Error(`Toast does not contain expected text: ${text}`);
+        }
+    }
+
+    public async verifyDeleteCases(text: string): Promise<void> {
+        const toastText = await this.page.locator(this.selectors.toastMessage).innerText();
+        if (!toastText.includes(text)) {
+            throw new Error(`Toast does not contain expected text: ${text}`);
+        }
+    }
+
+    public async verifyToastMessage(expectedText: string): Promise<void> {
+        const selector = this.selectors.toastMessageContains(expectedText);
+        const toastText = await this.page.locator(selector).innerText();
+        if (!toastText.includes(expectedText)) {
+            throw new Error(`Toast does not contain expected text: ${expectedText}`);
+        }
+    }
+}
+```

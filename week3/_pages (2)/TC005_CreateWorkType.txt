@@ -1,0 +1,41 @@
+```typescript
+import { test } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+import { WorkTypePage } from '../pages/WorkTypePage';
+
+test.describe('TC005_CreateWorkType', () => {
+  // Sample data set; replace with actual Excel data or test data provider logic
+  const testData = [
+    {
+      search: 'WorkTypeSearch',
+      name: 'NewWorkType',
+      desc: 'Description for new work type',
+      dd: 'DropdownValue',
+      verifyMsg: 'Work Type created successfully',
+    },
+  ];
+
+  testData.forEach(({ search, name, desc, dd, verifyMsg }) => {
+    test(`Verify that a new Work Type can be created successfully using input data`, async ({ page }) => {
+      const loginPage = new LoginPage(page);
+      const workTypePage = new WorkTypePage(page);
+
+      await loginPage
+        .enterUsername()
+        .enterPassword()
+        .clickLogin()
+        .clickAppLauncher()
+        .clickViewAll()
+        .enterSearchField(search)
+        .clickWorkTypeGroupLink()
+        .clickWorkTypeGroupTab()
+        .clickNewWorkTypeGroup()
+        .enterWorkTypeGroupName(name)
+        .enterWorkTypeDesc(desc)
+        .selectGroupType()
+        .clickWorkTypeSaveButton()
+        .verifyWorkTypeGroups(verifyMsg);
+    });
+  });
+});
+```

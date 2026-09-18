@@ -1,0 +1,97 @@
+```typescript
+import { BrowserContext, Page } from "@playwright/test";
+import { PlaywrightWrapper } from "../helpers/playwright";
+
+export class HomePage extends PlaywrightWrapper {
+    private readonly selectors = {
+        homeTitle: "//span[text()='Home']",
+        appLauncherIcon: "//div[@class='slds-icon-waffle']",
+        viewAllBtn: "//button[text()='View All']",
+        searchField: "//input[@placeholder='Search apps or items...']",
+        casesLink: "(//p[@class='slds-truncate']/mark[text()='Cases'])[1]",
+        legalEntityLink: "(//p[@class='slds-truncate']/mark[text()='Legal Entities'])",
+        leadsTab: "//a[@title='Leads']",
+        salesLink: "(//p[@class='slds-truncate']/mark[text()='Sales'])[3]",
+        opportunitiesLink: "//span[text()='Opportunities']",
+        tasksLink: "//span[text()='Tasks']",
+        contactLink: "//span[text()='Contacts']",
+        individualsLink: "//mark[text()='Individuals']",
+        workTypeGroupLink: "//mark[text()='Work Type']",
+        dynamicMark: (text: string, index: number = 1) => `(//mark[text()='${text}'])[${index}]`,
+    };
+
+    constructor(page: Page, context: BrowserContext) {
+        super(page, context);
+    }
+
+    public async verifyHomePage(): Promise<void> {
+        await this.validateElementVisibility(this.selectors.homeTitle, "Home Title");
+    }
+
+    public async clickAppLauncher(): Promise<void> {
+        await this.click(this.selectors.appLauncherIcon, "App Launcher Icon", "Button");
+    }
+
+    public async clickViewAll(): Promise<void> {
+        await this.click(this.selectors.viewAllBtn, "View All Button", "Button");
+    }
+
+    public async enterSearchField(search: string): Promise<void> {
+        await this.type(this.selectors.searchField, "Search Field", search);
+    }
+
+    public async clickCasesLink(): Promise<void> {
+        await this.click(this.selectors.casesLink, "Cases Link", "Link");
+    }
+
+    public async clickLegalEntity(): Promise<void> {
+        await this.click(this.selectors.legalEntityLink, "Legal Entity Link", "Link");
+    }
+
+    public async enterAppName(search: string): Promise<void> {
+        await this.type(this.selectors.searchField, "Search Field", search);
+    }
+
+    public async clickLeadsTab(): Promise<void> {
+        await this.waitSelector(this.selectors.leadsTab);
+        await this.click(this.selectors.leadsTab, "Leads Tab", "Link");
+    }
+
+    public async selectApp(appName: string): Promise<void> {
+        await this.type(this.selectors.searchField, "Search Field", appName);
+        const appLocator = this.selectors.dynamicMark(appName, 3);
+        await this.click(appLocator, `${appName} Option`, "Button");
+    }
+
+    public async clickIndividualsLink(): Promise<void> {
+        await this.click(this.selectors.individualsLink, "Individuals Link", "Link");
+    }
+
+    public async clickWorkTypeGroupLink(): Promise<void> {
+        await this.click(this.selectors.workTypeGroupLink, "Work Type Group Link", "Link");
+    }
+
+    public async clickSales(): Promise<void> {
+        await this.click(this.selectors.salesLink, "Sales Link", "Link");
+    }
+
+    public async clickOpportunities(): Promise<void> {
+        await this.waitSelector(this.selectors.opportunitiesLink);
+        await this.click(this.selectors.opportunitiesLink, "Opportunities Link", "Link");
+    }
+
+    public async clickTasksTab(): Promise<void> {
+        await this.waitSelector(this.selectors.tasksLink);
+        await this.click(this.selectors.tasksLink, "Tasks Tab", "Link");
+    }
+
+    public async typeSales(): Promise<void> {
+        await this.type(this.selectors.searchField, "Search Field", "Sales");
+    }
+
+    public async clickContact(): Promise<void> {
+        await this.waitSelector(this.selectors.contactLink);
+        await this.click(this.selectors.contactLink, "Contact Link", "Link");
+    }
+}
+```

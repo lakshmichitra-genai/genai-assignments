@@ -1,0 +1,37 @@
+```typescript
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+
+test.describe('TC002_CreateIndividuals', () => {
+  let loginPage: LoginPage;
+
+  // Test data provider – replace with real data source if available
+  const testData = [
+    { search: 'Individual', fName: 'John', lName: 'Doe' },
+    // Add more data rows as needed
+  ];
+
+  test.beforeAll(async ({ page, context }) => {
+    loginPage = new LoginPage(page, context);
+  });
+
+  test.each(testData)(
+    'Create Individual – %s %s',
+    async ({ search, fName, lName }) => {
+      await loginPage.enterUsername();
+      await loginPage.enterPassword();
+      await loginPage.clickLogin();
+      await loginPage.clickAppLauncher();
+      await loginPage.clickViewAll();
+      await loginPage.enterSearchField(search);
+      await loginPage.clickIndividualsLink();
+      await loginPage.clickNewButton();
+      await loginPage.selectSalutation();
+      await loginPage.enterFirstName(fName);
+      await loginPage.enterLastName(lName);
+      await loginPage.clickSaveButton();
+      await loginPage.verifyCreateIndividuals(lName);
+    }
+  );
+});
+```

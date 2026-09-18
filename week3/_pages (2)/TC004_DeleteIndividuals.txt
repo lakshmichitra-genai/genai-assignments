@@ -1,0 +1,37 @@
+```typescript
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+
+test.describe('TC004_DeleteIndividuals', () => {
+  test.beforeAll(() => {
+    // Test metadata
+    test.info().annotations.push({ type: 'testcaseName', description: 'TC004_DeleteIndividuals' });
+    test.info().annotations.push({ type: 'testDescription', description: 'Verify that Individual records can be deleted successfully' });
+    test.info().annotations.push({ type: 'authors', description: 'Hari' });
+    test.info().annotations.push({ type: 'category', description: 'Regression' });
+    test.info().annotations.push({ type: 'excelFileName', description: 'DeleteIndividuals' });
+  });
+
+  test('Delete individual records', async ({ page, context }) => {
+    const loginPage = new LoginPage(page, context);
+
+    // Sample data – replace with actual test data
+    const search = 'searchValue';
+    const name = 'individualName';
+    const verifyMsg = 'Individual deleted successfully';
+
+    await loginPage.enterUsername();
+    await loginPage.enterPassword();
+    await loginPage.clickLogin();
+    await loginPage.clickAppLauncher();
+    await loginPage.clickViewAll();
+    await loginPage.enterSearchField(search);
+    await loginPage.clickIndividualsLink();
+    await loginPage.enterIndividualSearchField(name);
+    await loginPage.clickShowActionDD();
+    await loginPage.clickDeleteLink();
+    await loginPage.clickPoupDeleteButton();
+    await loginPage.verifyDeleteIndividuals(verifyMsg);
+  });
+});
+```

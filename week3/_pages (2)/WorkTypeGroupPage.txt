@@ -1,0 +1,91 @@
+```typescript
+import { BrowserContext, Page } from "@playwright/test";
+import { PlaywrightWrapper } from "../helpers/playwright";
+
+export class WorkTypeGroupPage extends PlaywrightWrapper {
+    private readonly selectors = {
+        workTypeGroupTab: "//span[contains(text(),'Work Type Groups')]/following::a[1]",
+        newWorkTypeGroup: "//span[text()='New Work Type Group']",
+        workTypeGroupNameInput: "//input[@name='Name']",
+        workTypeDescTextarea: "//span[text()='Description']/following::textarea[1]",
+        groupTypeLabel: "//label[text()='Group Type']",
+        capacityOption: "//span[text()='Capacity']",
+        saveButton: "//button[@name='SaveEdit']",
+        toastMessage: "//span[@class='toastMessage slds-text-heading--small forceActionsText']",
+        searchField: "//input[@placeholder='Search this list...']",
+        showActionsDropdown: "(//button[contains(@class,'slds-button slds-button_icon-border')])[1]",
+        editLink: "//a[@title='Edit']",
+        deleteLink: "//a[@title='Delete']",
+        confirmDeleteButton: "//button[@title='Delete']",
+    };
+
+    constructor(page: Page, context: BrowserContext) {
+        super(page, context);
+    }
+
+    public async clickWorkTypeGroupTab(): Promise<void> {
+        await this.validateElementVisibility(this.selectors.workTypeGroupTab, "Work Type Groups Tab");
+        await this.click(this.selectors.workTypeGroupTab, "Work Type Groups Tab", "Link");
+    }
+
+    public async clickNewWorkTypeGroup(): Promise<void> {
+        await this.waitSelector(this.selectors.newWorkTypeGroup);
+        await this.click(this.selectors.newWorkTypeGroup, "New Work Type Group", "Button");
+    }
+
+    public async enterWorkTypeGroupName(gName: string): Promise<void> {
+        await this.type(this.selectors.workTypeGroupNameInput, "Work Type Group Name Input", gName);
+    }
+
+    public async enterWorkTypeDesc(desc: string): Promise<void> {
+        await this.type(this.selectors.workTypeDescTextarea, "Work Type Group Description Textarea", desc);
+    }
+
+    public async selectGroupType(): Promise<void> {
+        await this.click(this.selectors.groupTypeLabel, "Group Type Label", "Label");
+        await this.click(this.selectors.capacityOption, "Capacity Option", "Option");
+    }
+
+    public async clickWorkTypeSaveButton(): Promise<void> {
+        await this.click(this.selectors.saveButton, "Save Button", "Button");
+    }
+
+    public async verifyWorkTypeGroups(text: string): Promise<void> {
+        await this.waitSelector(this.selectors.toastMessage);
+        const toastText = await this.page.locator(this.selectors.toastMessage).textContent();
+        if (!toastText?.includes(text)) {
+            throw new Error(`Expected toast to contain "${text}", but got "${toastText}"`);
+        }
+    }
+
+    public async enterWorkTypeSearchField(search: string): Promise<void> {
+        await this.type(this.selectors.searchField, "Search Field", search);
+        await this.page.keyboard.press("Enter");
+    }
+
+    public async clickShowActionDD(): Promise<void> {
+        await this.waitSelector(this.selectors.showActionsDropdown);
+        await this.click(this.selectors.showActionsDropdown, "Show Actions Dropdown", "Button");
+    }
+
+    public async clickEditLink(): Promise<void> {
+        await this.click(this.selectors.editLink, "Edit Link", "Link");
+    }
+
+    public async clickDeleteLink(): Promise<void> {
+        await this.click(this.selectors.deleteLink, "Delete Link", "Link");
+    }
+
+    public async confirmDelete(): Promise<void> {
+        await this.click(this.selectors.confirmDeleteButton, "Confirm Delete Button", "Button");
+    }
+
+    public async verifyDeletionSuccessMessage(message: string): Promise<void> {
+        await this.waitSelector(this.selectors.toastMessage);
+        const toastText = await this.page.locator(this.selectors.toastMessage).textContent();
+        if (!toastText?.includes(message)) {
+            throw new Error(`Expected deletion toast to contain "${message}", but got "${toastText}"`);
+        }
+    }
+}
+```

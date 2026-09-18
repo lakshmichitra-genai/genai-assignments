@@ -1,0 +1,33 @@
+```typescript
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+
+const testData = [
+  { search: 'Individual1', fName: 'Jane', lName: 'Smith' },
+  // Add more data sets as needed
+];
+
+test.describe('TC003_EditIndividuals', () => {
+  testData.forEach(({ search, fName, lName }) => {
+    test(`Edit individual: ${search}`, async ({ page, context }) => {
+      const loginPage = new LoginPage(page, context);
+
+      await loginPage
+        .enterUsername()
+        .enterPassword()
+        .clickLogin()
+        .clickAppLauncher()
+        .clickViewAll()
+        .enterSearchField(search)
+        .clickIndividualsLink()
+        .clickShowActionDD()
+        .clickEditLink()
+        .selectSalutationOnEdit()
+        .enterFirstName(fName)
+        .enterLastName(lName)
+        .clickSaveButton()
+        .verifyEditIndividuals(fName);
+    });
+  });
+});
+```
